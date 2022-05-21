@@ -16,7 +16,7 @@ These are the following settings to set up, these are found in the Scripts windo
 
 - Update Interval: An update interval in seconds, how often it reads the text file for updates
 - Text File Path: The path to the text file which should be used for this script (a text file with a number, presumably updated by something else).
-- Equation: Equation that can be provided to be done over the number (represented by `x` in the equation) read from the text file, the script always rounds the number. An example equation could be `x/10` to remove the last number.
+- Equation: Equation that can be provided to be done over the number (represented by `x` in the equation) read from the text file, the script always rounds the number down. An example equation could be `x/10` to remove the last number.
 - Text Destination: A text source which the result of this script will update to. All styling can be done as normal in there, the text value will be overwritten by the script.
 
 There's also a refresh button in case you want to manually refresh (rerun) the script, this triggers the same as the interval.
