@@ -1,5 +1,5 @@
 import obspython as obs
-import ast
+import ast, math, os
 import operator as op
 
 # supported operators
@@ -11,8 +11,10 @@ interval = 30
 dest_name = ""
 file_path = ""
 equation = ""
+last_mod = 0
 
 # ------------------------------------------------------------
+
 def eval_expr(expr):
     return eval_(ast.parse(expr, mode='eval').body)
 
@@ -31,15 +33,23 @@ def update_text():
     global file_path
     global dest_name
     global equation
+    global last_mod
 
     dest = obs.obs_get_source_by_name(dest_name)
     if file_path is not None and dest is not None:
+        file_mod = os.path.getmtime(file_path)
+        if file_mod <= last_mod:
+            # return early if file hasn't been modified (release opened obs resources)
+            return obs.obs_source_release(dest)
+        last_mod = file_mod
+
         text = get_file_text(file_path)
         text = text.replace(",", "").replace(".", "")
+        # if there is no equation just use the number converted from the file and rounded down to a whole number
         if equation != "":
-            new_number = round(eval_expr(equation.replace("x", text)))
+            new_number = math.floor(eval_expr(equation.replace("x", text)))
         else:
-            new_number = round(int(text, 10))
+            new_number = math.floor(int(text, 10))
         set_source_text(dest, str(new_number))
     obs.obs_source_release(dest)
 
